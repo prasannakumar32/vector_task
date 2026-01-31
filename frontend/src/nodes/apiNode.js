@@ -1,13 +1,11 @@
-// apiNode.js
-
 import { NodeFactory } from './NodeFactory';
 import { Position } from 'reactflow';
 
 export const ApiNode = NodeFactory.createCustomNode({
   title: 'API Call',
   height: 180,
-  backgroundColor: '#f0fff4',
-  border: '2px solid #48bb78',
+  backgroundColor: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+  border: '2px solid #22c55e',
   handles: [
     {
       id: 'request',
@@ -38,7 +36,7 @@ export const ApiNode = NodeFactory.createCustomNode({
     {
       key: 'method',
       type: 'select',
-      label: 'Method:',
+      label: 'Method',
       defaultValue: 'GET',
       options: [
         { value: 'GET', label: 'GET' },
@@ -51,16 +49,19 @@ export const ApiNode = NodeFactory.createCustomNode({
     {
       key: 'url',
       type: 'text',
-      label: 'URL:',
+      label: 'URL',
       defaultValue: 'https://api.example.com/endpoint',
       placeholder: 'Enter API URL...'
     },
     {
       key: 'timeout',
       type: 'text',
-      label: 'Timeout (ms):',
+      label: 'Timeout (ms)',
       defaultValue: '5000'
     }
   ],
-  children: <span>🌐 HTTP API Request</span>
+  children: <div className="flex items-center space-x-2 text-green-700">
+    <span className="text-lg">🌐</span>
+    <span className="font-medium">HTTP API Request</span>
+  </div>
 });

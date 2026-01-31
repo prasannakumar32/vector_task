@@ -1,5 +1,3 @@
-// BaseNode.js
-
 import { useState } from 'react';
 import { Handle } from 'reactflow';
 
@@ -13,7 +11,7 @@ export const BaseNode = ({
     title = 'Node',
     width = 200,
     height = 80,
-    border = '1px solid black',
+    border = '1px solid #e2e8f0',
     backgroundColor = 'white',
     handles = [],
     fields = []
@@ -50,22 +48,28 @@ export const BaseNode = ({
     switch (field.type) {
       case 'text':
         return (
-          <label key={field.key}>
-            {field.label}:
+          <div key={field.key} className="space-y-1">
+            <label className="node-label">
+              {field.label}
+            </label>
             <input
               type="text"
+              className="node-input"
               value={value}
               onChange={(e) => handleFieldChange(field.key, e.target.value)}
               placeholder={field.placeholder}
             />
-          </label>
+          </div>
         );
       
       case 'select':
         return (
-          <label key={field.key}>
-            {field.label}:
+          <div key={field.key} className="space-y-1">
+            <label className="node-label">
+              {field.label}
+            </label>
             <select
+              className="node-select"
               value={value}
               onChange={(e) => handleFieldChange(field.key, e.target.value)}
             >
@@ -75,20 +79,23 @@ export const BaseNode = ({
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         );
       
       case 'textarea':
         return (
-          <label key={field.key}>
-            {field.label}:
+          <div key={field.key} className="space-y-1">
+            <label className="node-label">
+              {field.label}
+            </label>
             <textarea
+              className="node-textarea"
               value={value}
               onChange={(e) => handleFieldChange(field.key, e.target.value)}
               placeholder={field.placeholder}
               rows={field.rows || 3}
             />
-          </label>
+          </div>
         );
       
       default:
@@ -113,23 +120,24 @@ export const BaseNode = ({
   };
 
   return (
-    <div style={{
+    <div className="base-node" style={{
       width, 
       height, 
       border, 
       backgroundColor,
-      padding: '8px',
+      padding: '12px',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      position: 'relative'
     }}>
       {renderHandles()}
       
-      <div>
-        <span style={{ fontWeight: 'bold' }}>{title}</span>
+      <div className="mb-2">
+        <span className="font-semibold text-slate-800 text-sm">{title}</span>
       </div>
       
-      <div>
+      <div className="space-y-2 flex-1">
         {children}
         {fields.map(renderField)}
       </div>
@@ -143,7 +151,7 @@ export const createNodeConfig = (config) => {
   return {
     width: 200,
     height: 80,
-    border: '1px solid black',
+    border: '1px solid #e2e8f0',
     backgroundColor: 'white',
     ...config
   };

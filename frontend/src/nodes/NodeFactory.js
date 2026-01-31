@@ -1,5 +1,3 @@
-// NodeFactory.js
-
 import { BaseNode, createNodeConfig } from './BaseNode';
 import { Position } from 'reactflow';
 
@@ -18,13 +16,13 @@ export const NodeFactory = {
         {
           key: 'inputName',
           type: 'text',
-          label: 'Name:',
+          label: 'Name',
           defaultValue: (data, id) => data?.inputName || id.replace('customInput-', 'input_')
         },
         {
           key: 'inputType',
           type: 'select',
-          label: 'Type:',
+          label: 'Type',
           defaultValue: 'Text',
           options: [
             { value: 'Text', label: 'Text' },
@@ -54,13 +52,13 @@ export const NodeFactory = {
         {
           key: 'outputName',
           type: 'text',
-          label: 'Name:',
+          label: 'Name',
           defaultValue: (data, id) => data?.outputName || id.replace('customOutput-', 'output_')
         },
         {
           key: 'outputType',
           type: 'select',
-          label: 'Type:',
+          label: 'Type',
           defaultValue: 'Text',
           options: [
             { value: 'Text', label: 'Text' },
@@ -104,7 +102,10 @@ export const NodeFactory = {
 
     return ({ id, data }) => (
       <BaseNode id={id} data={data} config={config}>
-        <span>This is a LLM.</span>
+        <div className="flex items-center space-x-2 text-purple-700">
+          <span className="text-lg">🤖</span>
+          <span className="font-medium">LLM Processor</span>
+        </div>
       </BaseNode>
     );
   },
@@ -123,7 +124,7 @@ export const NodeFactory = {
         {
           key: 'text',
           type: 'text',
-          label: 'Text:',
+          label: 'Text',
           defaultValue: '{{input}}'
         }
       ],

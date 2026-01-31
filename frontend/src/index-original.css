@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900 min-h-screen;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code {
+    font-family: 'Fira Code', 'Source Code Pro', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      @apply p-4;
+    }
+  }
+}
+
+@layer components {
+  .node-toolbar {
+    @apply bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl shadow-soft p-4 transition-all duration-300 hover:shadow-medium;
+  }
+
+  .draggable-node {
+    @apply relative overflow-hidden transition-all duration-200 cursor-grab active:scale-95 hover:shadow-medium hover:-translate-y-1;
+    background: linear-gradient(135deg, var(--node-color-start) 0%, var(--node-color-end) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .draggable-node:active {
+    @apply cursor-grabbing;
+  }
+
+  .draggable-node::before {
+    content: '';
+    @apply absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-200;
+  }
+
+  .draggable-node:hover::before {
+    @apply opacity-100;
+  }
+
+  .pipeline-canvas {
+    @apply bg-white/60 backdrop-blur-sm border border-slate-200 rounded-xl shadow-soft overflow-hidden;
+  }
+
+  .submit-button {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold px-8 py-3 rounded-xl shadow-medium hover:shadow-strong hover:from-primary-600 hover:to-primary-700 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95;
+  }
+
+  .base-node {
+    @apply bg-white border border-slate-200 rounded-lg shadow-soft transition-all duration-200 hover:shadow-medium hover:border-primary-300;
+  }
+
+  .node-input {
+    @apply w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+  }
+
+  .node-select {
+    @apply w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white;
+  }
+
+  .node-textarea {
+    @apply w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 resize-none;
+  }
+
+  .node-label {
+    @apply block text-xs font-medium text-slate-700 mb-1;
+  }
+
+  .react-flow__handle {
+    @apply w-3 h-3 border-2 border-white bg-slate-400 hover:bg-primary-500 transition-colors duration-200;
+  }
+
+  .react-flow__handle.react-flow__handle-top {
+    @apply top-0;
+  }
+
+  .react-flow__handle.react-flow__handle-bottom {
+    @apply bottom-0;
+  }
+
+  .react-flow__handle.react-flow__handle-left {
+    @apply left-0;
+  }
+
+  .react-flow__handle.react-flow__handle-right {
+    @apply right-0;
+  }
+
+  .react-flow__node {
+    @apply transition-all duration-200;
+  }
+
+  .react-flow__node:hover {
+    @apply transform scale-105;
+  }
+
+  .react-flow__edge-path {
+    @apply transition-all duration-200;
+  }
+
+  .react-flow__edge:hover .react-flow__edge-path {
+    @apply stroke-primary-500;
+    stroke-width: 3;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+
+  .glass-morphism {
+    @apply bg-white/20 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .node-toolbar {
+    @apply p-3;
+  }
+
+  .draggable-node {
+    @apply min-w-[70px] h-[50px] text-xs;
+  }
+
+  .pipeline-canvas {
+    @apply h-[60vh];
+  }
+
+  .submit-button {
+    @apply px-6 py-2 text-sm;
+  }
+}
+
+@media (max-width: 480px) {
+  .draggable-node {
+    @apply min-w-[60px] h-[45px];
+  }
+
+  .base-node {
+    @apply w-40;
+  }
+}

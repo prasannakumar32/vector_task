@@ -1,16 +1,77 @@
 import { useState } from 'react';
+import { useStore } from './store';
+import { shallow } from 'zustand/shallow';
 import { StyledButton } from './styles/components';
 
 export const SubmitButton = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     
+    // Get nodes and edges from the store
+    const { nodes, edges } = useStore(
+        (state) => ({ nodes: state.nodes, edges: state.edges }),
+        shallow
+    );
+    
     const handleSubmit = async () => {
         setIsSubmitting(true);
         
-        setTimeout(() => {
+        try {
+            // Send pipeline data to backend for saving
+            const apiUrl = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8002'}${process.env.REACT_APP_API_ENDPOINT || '/pipelines'}/save`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nodes: nodes,
+                    edges: edges,
+                    name: `Pipeline_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            // Display user-friendly alert with results
+            showPipelineResultsAlert(result);
+            
+        } catch (error) {
+            console.error('Error submitting pipeline:', error);
+            const defaultPort = process.env.REACT_APP_API_BASE_URL?.split(':').pop() || '8002';
+            alert(`❌ Error submitting pipeline. Please make sure the backend is running on localhost:${defaultPort}`);
+        } finally {
             setIsSubmitting(false);
-            alert('Pipeline submitted successfully! 🎉');
-        }, 2000);
+        }
+    };
+    
+    const showPipelineResultsAlert = (result) => {
+        const { num_nodes, num_edges, is_dag, pipeline_id, error } = result;
+        
+        if (error) {
+            alert(`❌ Error: ${error}`);
+            return;
+        }
+        
+        const dagStatus = is_dag ? '✅ Valid DAG' : '⚠️ Contains Cycles';
+        const dagDescription = is_dag 
+            ? 'Your pipeline is a Directed Acyclic Graph and can be executed safely.' 
+            : 'Your pipeline contains cycles and cannot be executed as-is.';
+        
+        const pipelineInfo = pipeline_id 
+            ? `\nPipeline ID: #${pipeline_id} (Saved to database)`
+            : '\nPipeline analyzed (not saved)';
+        
+        alert(`🔍 Pipeline Analysis Results${pipelineInfo}
+        
+Nodes: ${num_nodes}
+Edges: ${num_edges}
+Status: ${dagStatus}
+
+${dagDescription}`);
     };
 
     return (

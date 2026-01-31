@@ -14,18 +14,39 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
-        <header className="text-center mb-12 floating">
-          <div className="inline-block">
-            <h1 className="text-5xl md:text-6xl font-bold text-gradient-primary mb-4 animate-glow">
-              Pipeline Builder
-            </h1>
-            <div className="h-1 w-32 bg-gradient-to-r from-primary-500 to-accent-500 mx-auto rounded-full mb-4"></div>
-            <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Create powerful workflows with our intuitive drag-and-drop interface
-            </p>
-          </div>
+    <div className="min-h-screen" style={{
+      background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 25%, #e2e8f0 50%, #cbd5e1 75%, #94a3b8 100%)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Animated background elements */}
+      <div style={{
+        position: 'absolute',
+        top: '-50%',
+        left: '-50%',
+        width: '200%',
+        height: '200%',
+        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+        animation: 'float 20s ease-in-out infinite',
+      }} />
+      <div style={{
+        position: 'absolute',
+        bottom: '-50%',
+        right: '-50%',
+        width: '200%',
+        height: '200%',
+        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+        animation: 'float 25s ease-in-out infinite reverse',
+      }} />
+      
+      <div className="relative z-10 max-w-7xl mx-auto p-6 space-y-8">
+        <header className="text-center space-y-4 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Pipeline Builder
+          </h1>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Create powerful workflows with our intuitive drag-and-drop interface
+          </p>
         </header>
         
         <main className="space-y-8">
@@ -46,6 +67,45 @@ function App() {
           <p>Built with ❤️ using React, ReactFlow, and Tailwind CSS</p>
         </footer>
       </div>
+      
+      {/* Global styles for animations */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(30px, -30px) rotate(120deg); }
+          66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+        
+        @keyframes fade-in {
+          from { 
+            opacity: 0; 
+            transform: translateY(20px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(0); 
+          }
+        }
+        
+        @keyframes slide-up {
+          from { 
+            opacity: 0; 
+            transform: translateY(30px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(0); 
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+          animation: slide-up 0.6s ease-out both;
+        }
+      `}</style>
     </div>
   );
 }

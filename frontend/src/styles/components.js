@@ -261,8 +261,8 @@ export const StyledDraggableNode = React.forwardRef(({
       {...props}
       style={{
         ...styles.draggableNode,
-        backgroundColor: nodeColor,
-        color: theme.colors.text.inverse,
+        '--node-color': nodeColor,
+        '--node-color-light': theme.colors.accent[`${nodeType}Light`] || theme.colors.accent.primaryLight,
         ...props.style,
       }}
       className={`draggable-node ${props.className || ''}`}

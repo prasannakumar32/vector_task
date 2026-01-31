@@ -2,30 +2,26 @@ import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
-import { InputNode } from './nodes/inputNode';
-import { LLMNode } from './nodes/llmNode';
-import { OutputNode } from './nodes/outputNode';
-import { TextNode } from './nodes/textNode';
-import { MathNode } from './nodes/mathNode';
-import { ConditionNode } from './nodes/conditionNode';
-import { TransformNode } from './nodes/transformNode';
-import { DatabaseNode } from './nodes/databaseNode';
-import { ApiNode } from './nodes/apiNode';
+import { NodeFactory } from './nodes/NodeFactory';
+import { MathNode, DelayNode, ConditionNode, FormatterNode, LoggerNode } from './nodes/DemoNodes';
+import { StyledCanvas } from './styles/components';
 
 import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+
+// Use the enhanced nodes from NodeFactory and demo nodes
 const nodeTypes = {
-  customInput: InputNode,
-  llm: LLMNode,
-  customOutput: OutputNode,
-  text: TextNode,
+  customInput: NodeFactory.createInputNode(),
+  llm: NodeFactory.createLLMNode(),
+  customOutput: NodeFactory.createOutputNode(),
+  text: NodeFactory.createTextNode(),
   math: MathNode,
+  delay: DelayNode,
   condition: ConditionNode,
-  transform: TransformNode,
-  database: DatabaseNode,
-  api: ApiNode,
+  formatter: FormatterNode,
+  logger: LoggerNode,
 };
 
 const selector = (state) => ({
@@ -104,7 +100,7 @@ export const PipelineUI = () => {
                 </div>
             </div>
             
-            <div ref={reactFlowWrapper} className="pipeline-canvas" style={{height: '70vh'}}>
+            <StyledCanvas ref={reactFlowWrapper}>
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}
@@ -143,7 +139,7 @@ export const PipelineUI = () => {
                         }}
                     />
                 </ReactFlow>
-            </div>
+            </StyledCanvas>
         </div>
     )
 }

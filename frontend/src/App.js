@@ -1,8 +1,18 @@
 import { PipelineToolbar } from './toolbar';
 import { PipelineUI } from './ui';
 import { SubmitButton } from './submit';
+import { cssVariables } from './styles/theme';
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(() => {
+    // Inject CSS custom properties
+    const root = document.documentElement;
+    Object.entries(cssVariables).forEach(([property, value]) => {
+      root.style.setProperty(property, value);
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">

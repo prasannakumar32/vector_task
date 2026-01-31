@@ -1,4 +1,5 @@
 import { BaseNode, createNodeConfig } from './BaseNode';
+import { EnhancedTextNode } from './EnhancedTextNode';
 import { Position } from 'reactflow';
 
 export const NodeFactory = {
@@ -111,28 +112,9 @@ export const NodeFactory = {
   },
 
   createTextNode: (customConfig = {}) => {
-    const config = createNodeConfig({
-      title: 'Text',
-      handles: [
-        {
-          id: 'output',
-          type: 'source',
-          position: Position.Right
-        }
-      ],
-      fields: [
-        {
-          key: 'text',
-          type: 'text',
-          label: 'Text',
-          defaultValue: '{{input}}'
-        }
-      ],
-      ...customConfig
-    });
-
+    // Return the enhanced text node component directly
     return ({ id, data }) => (
-      <BaseNode id={id} data={data} config={config} />
+      <EnhancedTextNode id={id} data={data} />
     );
   },
 

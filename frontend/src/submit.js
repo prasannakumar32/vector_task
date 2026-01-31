@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { StyledButton } from './styles/components';
 
 export const SubmitButton = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,13 +49,12 @@ export const SubmitButton = () => {
                 </div>
             </div>
             
-            <button
+            <StyledButton
                 type="submit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className={`submit-button group relative ${
-                    isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
-                }`}
+                variant="primary"
+                className="group relative"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
@@ -77,7 +77,7 @@ export const SubmitButton = () => {
                         </svg>
                     </div>
                 )}
-            </button>
+            </StyledButton>
             
             <div className="text-center space-y-2">
                 <p className="text-xs text-slate-500 max-w-md">

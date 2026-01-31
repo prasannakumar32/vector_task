@@ -43,33 +43,33 @@ export const DraggableNode = ({ type, label }) => {
           icon: '🔢',
           gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%)'
         },
+        delay: {
+          start: '#f97316',
+          end: '#ea580c',
+          shadow: 'rgba(249, 115, 22, 0.3)',
+          icon: '⏱️',
+          gradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)'
+        },
         condition: {
           start: '#06b6d4',
           end: '#0891b2',
           shadow: 'rgba(6, 182, 212, 0.3)',
-          icon: '🔀',
+          icon: '�',
           gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%)'
         },
-        transform: {
+        formatter: {
           start: '#ec4899',
           end: '#db2777',
           shadow: 'rgba(236, 72, 153, 0.3)',
-          icon: '🔄',
+          icon: '🎨',
           gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)'
         },
-        database: {
+        logger: {
           start: '#6366f1',
           end: '#4f46e5',
           shadow: 'rgba(99, 102, 241, 0.3)',
-          icon: '🗄️',
+          icon: '📝',
           gradient: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%)'
-        },
-        api: {
-          start: '#14b8a6',
-          end: '#0d9488',
-          shadow: 'rgba(20, 184, 166, 0.3)',
-          icon: '🌐',
-          gradient: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0f766e 100%)'
         }
       };
       

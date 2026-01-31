@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Handle } from 'reactflow';
+import { StyledField } from '../styles/components';
 
 export const BaseNode = ({ 
   id, 
@@ -14,7 +15,10 @@ export const BaseNode = ({
     border = '1px solid #e2e8f0',
     backgroundColor = 'white',
     handles = [],
-    fields = []
+    fields = [],
+    icon = null,
+    badge = null,
+    description = null
   } = config;
 
   // Initialize state for fields using a single state object
@@ -45,62 +49,21 @@ export const BaseNode = ({
   const renderField = (field) => {
     const value = fieldValues[field.key];
     
-    switch (field.type) {
-      case 'text':
-        return (
-          <div key={field.key} className="space-y-1">
-            <label className="node-label">
-              {field.label}
-            </label>
-            <input
-              type="text"
-              className="node-input"
-              value={value}
-              onChange={(e) => handleFieldChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-            />
-          </div>
-        );
-      
-      case 'select':
-        return (
-          <div key={field.key} className="space-y-1">
-            <label className="node-label">
-              {field.label}
-            </label>
-            <select
-              className="node-select"
-              value={value}
-              onChange={(e) => handleFieldChange(field.key, e.target.value)}
-            >
-              {field.options.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        );
-      
-      case 'textarea':
-        return (
-          <div key={field.key} className="space-y-1">
-            <label className="node-label">
-              {field.label}
-            </label>
-            <textarea
-              className="node-textarea"
-              value={value}
-              onChange={(e) => handleFieldChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-              rows={field.rows || 3}
-            />
-          </div>
-        );
-      
-      default:
-        return null;
-    }
+    return (
+      <StyledField
+        key={field.key}
+        label={field.label}
+        type={field.type}
+        value={value}
+        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+        placeholder={field.placeholder}
+        options={field.options}
+        min={field.min}
+        max={field.max}
+        step={field.step}
+        rows={field.rows}
+      />
+    );
   };
 
   const renderHandles = () => {
@@ -114,6 +77,7 @@ export const BaseNode = ({
           position={handle.position}
           id={`${id}-${handle.id}`}
           style={handleStyle}
+          title={handle.title || handle.id}
         />
       );
     });
@@ -134,7 +98,20 @@ export const BaseNode = ({
       {renderHandles()}
       
       <div className="mb-2">
-        <span className="font-semibold text-slate-800 text-sm">{title}</span>
+        <div className="flex items-center justify-between">
+          <span className="font-semibold text-slate-800 text-sm flex items-center">
+            {icon && <span className="mr-2">{icon}</span>}
+            {title}
+          </span>
+          {badge && (
+            <span className={`text-xs px-2 py-1 rounded-full ${badge.className || 'bg-blue-100 text-blue-700'}`}>
+              {badge.text}
+            </span>
+          )}
+        </div>
+        {description && (
+          <p className="text-xs text-slate-500 mt-1">{description}</p>
+        )}
       </div>
       
       <div className="space-y-2 flex-1">

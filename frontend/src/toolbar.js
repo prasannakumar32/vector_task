@@ -1,22 +1,15 @@
 import { DraggableNode } from './draggableNode';
+import { StyledToolbar, StyledToolbarHeader } from './styles/components';
 
 export const PipelineToolbar = () => {
     return (
-        <div className="node-toolbar">
-            <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-gradient-primary">
-                      Node Components
-                    </h2>
-                    <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-primary-500 rounded-full animate-pulse-soft"></div>
-                        <span className="text-sm text-slate-600">Ready to build</span>
-                    </div>
-                </div>
-                <p className="text-slate-600 leading-relaxed">
-                  Drag and drop these components to build your powerful pipeline workflow
-                </p>
-            </div>
+        <StyledToolbar>
+            <StyledToolbarHeader
+                title="Node Components"
+                icon="🧩"
+                status="ready"
+                description="Drag and drop these components to build your powerful pipeline workflow"
+            />
             
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-4">
                 <div className="animate-scale-in" style={{ animationDelay: '0.1s' }}>
@@ -35,16 +28,16 @@ export const PipelineToolbar = () => {
                     <DraggableNode type='math' label='Math' />
                 </div>
                 <div className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
-                    <DraggableNode type='condition' label='Condition' />
+                    <DraggableNode type='delay' label='Delay' />
                 </div>
                 <div className="animate-scale-in" style={{ animationDelay: '0.7s' }}>
-                    <DraggableNode type='transform' label='Transform' />
+                    <DraggableNode type='condition' label='Condition' />
                 </div>
                 <div className="animate-scale-in" style={{ animationDelay: '0.8s' }}>
-                    <DraggableNode type='database' label='Database' />
+                    <DraggableNode type='formatter' label='Formatter' />
                 </div>
                 <div className="animate-scale-in" style={{ animationDelay: '0.9s' }}>
-                    <DraggableNode type='api' label='API' />
+                    <DraggableNode type='logger' label='Logger' />
                 </div>
             </div>
             
@@ -58,6 +51,6 @@ export const PipelineToolbar = () => {
                     </p>
                 </div>
             </div>
-        </div>
+        </StyledToolbar>
     );
 };

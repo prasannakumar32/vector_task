@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 
-export const EnhancedTextNode = ({ id, data }) => {
+export const EnhancedTextNode = ({ id, data, onDataChange }) => {
   const [text, setText] = useState(data?.text || '{{input}}');
   const [variables, setVariables] = useState([]);
   const [dimensions, setDimensions] = useState({ width: 200, height: 80 });
   const textareaRef = useRef(null);
+  const isMounted = useRef(true);
+  const calculationTimeout = useRef(null);
 
   // Extract variables from text ({{variable_name}})
   const extractVariables = (text) => {
@@ -21,56 +23,97 @@ export const EnhancedTextNode = ({ id, data }) => {
   };
 
   // Calculate dynamic dimensions based on text content
-  const calculateDimensions = (text) => {
-    if (!textareaRef.current) {
+  const calculateDimensions = useCallback((text) => {
+    if (!isMounted.current || !textareaRef.current) {
       return { width: 200, height: 80 };
     }
 
-    // Create a temporary div to measure text
-    const tempDiv = document.createElement('div');
-    const styles = window.getComputedStyle(textareaRef.current);
-    
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.visibility = 'hidden';
-    tempDiv.style.width = 'auto';
-    tempDiv.style.height = 'auto';
-    tempDiv.style.whiteSpace = 'pre-wrap';
-    tempDiv.style.wordWrap = 'break-word';
-    tempDiv.style.padding = styles.padding;
-    tempDiv.style.fontSize = styles.fontSize;
-    tempDiv.style.fontFamily = styles.fontFamily;
-    tempDiv.style.lineHeight = styles.lineHeight;
-    tempDiv.style.width = '180px'; // Base width minus padding
-    
-    tempDiv.textContent = text;
-    document.body.appendChild(tempDiv);
-    
-    const height = Math.max(80, Math.min(300, tempDiv.offsetHeight + 40)); // Min 80px, Max 300px
-    const width = Math.max(200, Math.min(400, tempDiv.offsetWidth + 40)); // Min 200px, Max 400px
-    
-    document.body.removeChild(tempDiv);
-    
-    return { width, height };
-  };
+    try {
+      // Create a temporary div to measure text
+      const tempDiv = document.createElement('div');
+      const styles = window.getComputedStyle(textareaRef.current);
+      
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.visibility = 'hidden';
+      tempDiv.style.width = 'auto';
+      tempDiv.style.height = 'auto';
+      tempDiv.style.whiteSpace = 'pre-wrap';
+      tempDiv.style.wordWrap = 'break-word';
+      tempDiv.style.padding = styles.padding;
+      tempDiv.style.fontSize = styles.fontSize;
+      tempDiv.style.fontFamily = styles.fontFamily;
+      tempDiv.style.lineHeight = styles.lineHeight;
+      tempDiv.style.width = '180px'; // Base width minus padding
+      
+      tempDiv.textContent = text;
+      document.body.appendChild(tempDiv);
+      
+      const height = Math.max(80, Math.min(300, tempDiv.offsetHeight + 40)); // Min 80px, Max 300px
+      const width = Math.max(200, Math.min(400, tempDiv.offsetWidth + 40)); // Min 200px, Max 400px
+      
+      // Clean up immediately
+      if (tempDiv.parentNode) {
+        document.body.removeChild(tempDiv);
+      }
+      
+      return { width, height };
+    } catch (error) {
+      console.warn('Error calculating dimensions:', error);
+      return { width: 200, height: 80 };
+    }
+  }, []);
 
-  // Update variables when text changes
+  // Update variables and dimensions when text changes (combined to prevent race condition)
   useEffect(() => {
-    const newVariables = extractVariables(text);
-    setVariables(newVariables);
-  }, [text]);
+    // Clear any pending timeout
+    if (calculationTimeout.current) {
+      clearTimeout(calculationTimeout.current);
+    }
 
-  // Update dimensions when text changes
+    // Debounce the calculations to improve performance
+    calculationTimeout.current = setTimeout(() => {
+      if (!isMounted.current) return;
+      
+      const newVariables = extractVariables(text);
+      const newDimensions = calculateDimensions(text);
+      
+      setVariables(newVariables);
+      setDimensions(newDimensions);
+    }, 100); // 100ms debounce
+
+    return () => {
+      if (calculationTimeout.current) {
+        clearTimeout(calculationTimeout.current);
+      }
+    };
+  }, [text, calculateDimensions]);
+
+  // Sync text state back to parent data
   useEffect(() => {
-    const newDimensions = calculateDimensions(text);
-    setDimensions(newDimensions);
-  }, [text]);
+    if (onDataChange && isMounted.current) {
+      onDataChange({ ...data, text });
+    }
+  }, [text, data, onDataChange]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      if (calculationTimeout.current) {
+        clearTimeout(calculationTimeout.current);
+      }
+    };
+  }, []);
 
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
 
   const renderVariableHandles = () => {
-    return variables.map((variable, index) => {
+    const maxHandles = Math.floor((dimensions.height - 60) / 25); // Calculate max handles based on height
+    const displayVariables = variables.slice(0, maxHandles);
+    
+    return displayVariables.map((variable, index) => {
       const topPosition = 30 + (index * 25); // Space handles vertically
       
       return (
@@ -78,7 +121,7 @@ export const EnhancedTextNode = ({ id, data }) => {
           key={variable}
           type="target"
           position={Position.Left}
-          id={`${id}-${variable}`}
+          id={`${id}-input-${variable}`}
           style={{
             top: `${topPosition}px`,
             background: '#3b82f6',
@@ -90,6 +133,9 @@ export const EnhancedTextNode = ({ id, data }) => {
       );
     });
   };
+
+  // Calculate max handles for overflow display
+  const maxHandles = Math.floor((dimensions.height - 60) / 25);
 
   return (
     <div 
@@ -141,20 +187,9 @@ export const EnhancedTextNode = ({ id, data }) => {
           }}
         />
         
-        {/* Variable preview */}
-        {variables.length > 0 && (
-          <div className="mt-2 text-xs text-slate-500">
-            <div className="font-semibold mb-1">Variables detected:</div>
-            <div className="flex flex-wrap gap-1">
-              {variables.map(variable => (
-                <span 
-                  key={variable}
-                  className="bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-200"
-                >
-                  {variable}
-                </span>
-              ))}
-            </div>
+        {variables.length > maxHandles && (
+          <div className="text-xs text-orange-600 mt-1">
+            +{variables.length - maxHandles} more variable{variables.length - maxHandles !== 1 ? 's' : ''}
           </div>
         )}
       </div>

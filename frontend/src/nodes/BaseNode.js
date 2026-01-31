@@ -32,7 +32,7 @@ export const BaseNode = ({
         defaultValue = defaultValue(data, id);
       }
       
-      values[field.key] = data?.[field.key] || defaultValue;
+      values[field.key] = data?.[field.key] !== undefined ? data[field.key] : defaultValue;
     });
     return values;
   };

@@ -32,22 +32,31 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  setNodes: state.setNodes,
+  onNodeDataChange: (nodeId, newData) => {
+    state.setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === nodeId ? { ...node, data: newData } : node
+      )
+    );
+  }
 });
 
 export const PipelineUI = () => {
-    const reactFlowWrapper = useRef(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect
-    } = useStore(selector, shallow);
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const {
+    nodes,
+    edges,
+    getNodeID,
+    addNode,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    onNodeDataChange
+  } = useStore(selector, shallow);
 
-    const getInitNodeData = (nodeID, type) => {
+  const getInitNodeData = (nodeID, type) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
       return nodeData;
     }
@@ -77,11 +86,19 @@ export const PipelineUI = () => {
               position,
               data: getInitNodeData(nodeID, type),
             };
+
+            // Add onDataChange handler for text nodes
+            if (type === 'text') {
+              newNode.data = {
+                ...newNode.data,
+                onDataChange: (newData) => onNodeDataChange(nodeID, newData)
+              };
+            }
       
             addNode(newNode);
           }
         },
-        [reactFlowInstance, getNodeID, addNode]
+        [reactFlowInstance, getNodeID, addNode, onNodeDataChange]
     );
 
     const onDragOver = useCallback((event) => {
@@ -142,4 +159,4 @@ export const PipelineUI = () => {
             </StyledCanvas>
         </div>
     )
-}
+};

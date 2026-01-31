@@ -25,6 +25,9 @@ export const useStore = create((set, get) => ({
             nodes: [...get().nodes, node]
         });
     },
+    setNodes: (nodes) => {
+        set({ nodes });
+    },
     onNodesChange: (changes) => {
       set({
         nodes: applyNodeChanges(changes, get().nodes),

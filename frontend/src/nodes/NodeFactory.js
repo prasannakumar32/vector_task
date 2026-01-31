@@ -63,7 +63,7 @@ export const NodeFactory = {
           defaultValue: 'Text',
           options: [
             { value: 'Text', label: 'Text' },
-            { value: 'File', label: 'Image' }
+            { value: 'Image', label: 'Image' }
           ]
         }
       ],
@@ -113,8 +113,8 @@ export const NodeFactory = {
 
   createTextNode: (customConfig = {}) => {
     // Return the enhanced text node component directly
-    return ({ id, data }) => (
-      <EnhancedTextNode id={id} data={data} />
+    return ({ id, data, onDataChange }) => (
+      <EnhancedTextNode id={id} data={data} onDataChange={onDataChange} />
     );
   },
 

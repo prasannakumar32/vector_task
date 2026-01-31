@@ -16,8 +16,8 @@ export const SubmitButton = () => {
         setIsSubmitting(true);
         
         try {
-            // Send pipeline data to backend for saving
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8002'}${process.env.REACT_APP_API_ENDPOINT || '/pipelines'}/save`;
+            // Send pipeline data to backend for analysis
+            const apiUrl = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8002'}${process.env.REACT_APP_API_ENDPOINT || '/pipelines'}/parse`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -62,8 +62,8 @@ export const SubmitButton = () => {
             : 'Your pipeline contains cycles and cannot be executed as-is.';
         
         const pipelineInfo = pipeline_id 
-            ? `\nPipeline ID: #${pipeline_id} (Saved to database)`
-            : '\nPipeline analyzed (not saved)';
+            ? `\nPipeline ID: #${pipeline_id} (Analysis complete)`
+            : '\nPipeline analysis complete';
         
         alert(`🔍 Pipeline Analysis Results${pipelineInfo}
         

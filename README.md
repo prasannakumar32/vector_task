@@ -34,20 +34,20 @@ npm start
 
 4. **Access the Application**
 - Frontend: http://localhost:3001
-- Backend API: http://localhost:8002
+- Backend API: http://localhost:8000
 
 ## ⚙️ Environment Configuration
 
 ### Backend (.env)
 ```env
 HOST=0.0.0.0
-PORT=8002
+PORT=8000
 DATABASE_URL=pipelines.db
 ```
 
 ### Frontend (.env)
 ```env
-REACT_APP_API_BASE_URL=http://localhost:8002
+REACT_APP_API_BASE_URL=http://localhost:8000
 REACT_APP_API_ENDPOINT=/pipelines
 PORT=3001
 ```

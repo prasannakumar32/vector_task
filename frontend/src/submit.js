@@ -17,7 +17,7 @@ export const SubmitButton = () => {
         
         try {
             // Send pipeline data to backend for analysis
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8002'}${process.env.REACT_APP_API_ENDPOINT || '/pipelines'}/parse`;
+            const apiUrl = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000'}${process.env.REACT_APP_API_ENDPOINT || '/pipelines'}/parse`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -41,7 +41,7 @@ export const SubmitButton = () => {
             
         } catch (error) {
             console.error('Error submitting pipeline:', error);
-            const defaultPort = process.env.REACT_APP_API_BASE_URL?.split(':').pop() || '8002';
+            const defaultPort = process.env.REACT_APP_API_BASE_URL?.split(':').pop() || '8000';
             alert(`❌ Error submitting pipeline. Please make sure the backend is running on localhost:${defaultPort}`);
         } finally {
             setIsSubmitting(false);
